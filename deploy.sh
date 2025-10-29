@@ -1,5 +1,12 @@
 #!/usr/bin/env bash
 
+duration=${1:-10}
+
+if [ -z $duration ]; then
+	echo "deploy.sh [DURATION (minutes)]"
+	exit
+fi
+
 if [ ! -f "private_keys.txt" ]; then
 	echo -e "The private_keys.txt file does not exist.\nPlease, create it first."
 	exit
@@ -44,5 +51,7 @@ install_foundry
 iter=1
 while IFS= read -r line; do
     create_contract $line $iter
+    echo "Wait for $duration minute(s)..."
+    sleep "${duration}m"
     iter=$((iter + 1))
 done < private_keys.txt
